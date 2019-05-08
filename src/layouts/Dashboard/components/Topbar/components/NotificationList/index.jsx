@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 // Externals
@@ -29,111 +29,104 @@ import styles from './styles';
 const icons = {
   order: {
     icon: <DollarIcon />,
-    color: 'blue'
+    color: 'blue',
   },
   user: {
     icon: <PeopleIcon />,
-    color: 'red'
+    color: 'red',
   },
   product: {
     icon: <ApplicationIcon />,
-    color: 'green'
+    color: 'green',
   },
   feature: {
     icon: <CodeIcon />,
-    color: 'purple'
-  }
+    color: 'purple',
+  },
 };
 
-class NotificationList extends Component {
-  render() {
-    const { className, classes, notifications, onSelect } = this.props;
+const NotificationList = ({ className, classes, notifications, onSelect }) => {
+  const rootClassName = classNames(classes.root, className);
 
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <div className={rootClassName}>
-        {notifications.length > 0 ? (
-          <Fragment>
-            <div className={classes.header}>
-              <Typography variant="h6">User Notifications</Typography>
-              <Typography
-                className={classes.subtitle}
-                variant="body2"
-              >
-                {notifications.length} new notifications
-              </Typography>
-            </div>
-            <div className={classes.content}>
-              <List component="div">
-                {notifications.map(notification => (
-                  <Link
-                    key={notification.id}
-                    to="#"
-                    // to={notification.to}
-                  >
-                    <ListItem
-                      className={classes.listItem}
-                      component="div"
-                      onClick={onSelect}
-                    >
-                      <ListItemIcon
-                        className={classes.listItemIcon}
-                        style={{ color: icons[notification.type].color }}
-                      >
-                        {icons[notification.type].icon}
-                      </ListItemIcon>
-                      <ListItemText
-                        classes={{ secondary: classes.listItemTextSecondary }}
-                        primary={notification.title}
-                        secondary={notification.when}
-                      />
-                      <ArrowForwardIosIcon className={classes.arrowForward} />
-                    </ListItem>
-                    <Divider />
-                  </Link>
-                ))}
-              </List>
-              <div className={classes.footer}>
-                <Button
-                  color="primary"
-                  component={Link}
-                  size="small"
-                  to="/notifications"
-                  variant="contained"
-                >
-                  See all
-                </Button>
-              </div>
-            </div>
-          </Fragment>
-        ) : (
-          <div className={classes.empty}>
-            <div className={classes.emptyImageWrapper}>
-              <img
-                alt="Empty list"
-                className={classes.emptyImage}
-                src="/images/empty.png"
-              />
-            </div>
-            <Typography variant="h4">There's nothing here...</Typography>
+  return (
+    <div className={rootClassName}>
+      {notifications.length > 0 ? (
+        <>
+          <div className={classes.header}>
+            <Typography variant="h6">User Notifications</Typography>
+            <Typography className={classes.subtitle} variant="body2">
+              {notifications.length} new notifications
+            </Typography>
           </div>
-        )}
-      </div>
-    );
-  }
-}
+          <div className={classes.content}>
+            <List component="div">
+              {notifications.map(notification => (
+                <Link
+                  key={notification.id}
+                  to="#"
+                  // to={notification.to}
+                >
+                  <ListItem
+                    className={classes.listItem}
+                    component="div"
+                    onClick={onSelect}
+                  >
+                    <ListItemIcon
+                      className={classes.listItemIcon}
+                      style={{ color: icons[notification.type].color }}
+                    >
+                      {icons[notification.type].icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      classes={{ secondary: classes.listItemTextSecondary }}
+                      primary={notification.title}
+                      secondary={notification.when}
+                    />
+                    <ArrowForwardIosIcon className={classes.arrowForward} />
+                  </ListItem>
+                  <Divider />
+                </Link>
+              ))}
+            </List>
+            <div className={classes.footer}>
+              <Button
+                color="primary"
+                component={Link}
+                size="small"
+                to="/notifications"
+                variant="contained"
+              >
+                See all
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className={classes.empty}>
+          <div className={classes.emptyImageWrapper}>
+            <img
+              alt="Empty list"
+              className={classes.emptyImage}
+              src="/images/empty.png"
+            />
+          </div>
+          <Typography variant="h4">There's nothing here...</Typography>
+        </div>
+      )}
+    </div>
+  );
+};
 
 NotificationList.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   notifications: PropTypes.array.isRequired,
-  onSelect: PropTypes.func
+  onSelect: PropTypes.func,
 };
 
 NotificationList.defaultProps = {
   notifications: [],
-  onSelect: () => {}
+  onSelect: () => {},
 };
 
 export default withStyles(styles)(NotificationList);

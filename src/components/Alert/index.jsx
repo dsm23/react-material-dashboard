@@ -20,18 +20,15 @@ import CloseIcon from '@material-ui/icons/Close';
 // Component styles
 import styles from './styles';
 
+const getIconForIntent = intent =>
+  ({
+    success: <CheckCircleIcon />,
+    info: <InfoIcon />,
+    warning: <WarningIcon />,
+    danger: <ErrorIcon />,
+  }[intent]);
+
 class Alert extends Component {
-  getIconForIntent = intent => {
-    const map = {
-      success: <CheckCircleIcon />,
-      info: <InfoIcon />,
-      warning: <WarningIcon />,
-      danger: <ErrorIcon />
-    };
-
-    return map[intent];
-  };
-
   render() {
     const {
       classes,
@@ -48,37 +45,28 @@ class Alert extends Component {
     const rootClassName = classNames(
       {
         [classes.root]: true,
-        [classes[intent]]: intent
+        [classes[intent]]: intent,
       },
-      className
+      className,
     );
 
     return (
-      <div
-        {...rest}
-        className={rootClassName}
-      >
+      <div {...rest} className={rootClassName}>
         {hasIcon && (
           <div className={{}}>
             <span className={classes.intentIcon}>
-              {this.getIconForIntent(intent)}
+              {getIconForIntent(intent)}
             </span>
           </div>
         )}
         <div className={classes.content}>
           {title && (
-            <Typography
-              className={classes.title}
-              variant="h5"
-            >
+            <Typography className={classes.title} variant="h5">
               {title}
             </Typography>
           )}
           {description && (
-            <Typography
-              className={classes.description}
-              variant="subtitle2"
-            >
+            <Typography className={classes.description} variant="subtitle2">
               {description}
             </Typography>
           )}
@@ -104,14 +92,14 @@ Alert.propTypes = {
   intent: PropTypes.string,
   isRemoveable: PropTypes.bool,
   onRemove: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.string,
 };
 
 Alert.defaultProps = {
   intent: 'success',
   hasIcon: true,
   isRemoveable: true,
-  onRemove: () => {}
+  onRemove: () => {},
 };
 
 export default withStyles(styles)(Alert);

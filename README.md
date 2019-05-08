@@ -85,7 +85,7 @@ material-react-dashboard
 	│	└── SearchInput
 	├── data
 	├── helpers
-	├── HOCs
+	├── hoc
 	│	└── authGuard
 	├── icons
 	│	├── Facebook

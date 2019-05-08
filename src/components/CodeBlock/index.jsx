@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
@@ -10,22 +10,19 @@ import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace';
 // Prism theme
 import './prism.css';
 
-class CodeBlock extends Component {
-  render() {
-    const { language, code } = this.props;
-    const codeHTML = Prism.highlight(code, Prism.languages[language], language);
+const CodeBlock = ({ language, code }) => {
+  const codeHTML = Prism.highlight(code, Prism.languages[language], language);
 
-    return (
-      <pre className={`language-${language}`}>
-        <code dangerouslySetInnerHTML={{ __html: codeHTML }} />
-      </pre>
-    );
-  }
-}
+  return (
+    <pre className={`language-${language}`}>
+      <code dangerouslySetInnerHTML={{ __html: codeHTML }} />
+    </pre>
+  );
+};
 
 CodeBlock.propTypes = {
   code: PropTypes.string.isRequired,
-  language: PropTypes.string.isRequired
+  language: PropTypes.string.isRequired,
 };
 
 export default CodeBlock;

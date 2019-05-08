@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
@@ -22,40 +22,27 @@ const statusColors = {
   done: 'success'
 };
 
-class Task extends Component {
-  render() {
-    const {
-      classes,
-      className,
-      title,
-      desc,
-      status,
-      color,
-      ...rest
-    } = this.props;
+const Task = props => {
+  const { classes, className, title, desc, status, color, ...rest } = props;
 
-    const rootClassName = classNames(
-      {
-        [classes.root]: true,
-        [classes[color]]: color
-      },
-      className
-    );
+  const rootClassName = cn(
+    {
+      [classes.root]: true,
+      [classes[color]]: color
+    },
+    className
+  );
 
-    return (
-      <div
-        {...rest}
-        className={rootClassName}
-      >
-        <div className={classes.details}>
-          <Typography variant="h6">{title}</Typography>
-          <Typography variant="caption">{desc}</Typography>
-        </div>
-        <Status color={statusColors[status]} />
+  return (
+    <div {...rest} className={rootClassName}>
+      <div className={classes.details}>
+        <Typography variant="h6">{title}</Typography>
+        <Typography variant="caption">{desc}</Typography>
       </div>
-    );
-  }
-}
+      <Status color={statusColors[status]} />
+    </div>
+  );
+};
 
 Task.propTypes = {
   className: PropTypes.string,

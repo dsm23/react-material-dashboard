@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
-import classNames from 'classnames';
+import cn from 'classnames';
 import PropTypes from 'prop-types';
 
 // Material helpers
@@ -15,22 +15,15 @@ const styles = () => ({
   }
 });
 
-class PortletToolbar extends Component {
-  render() {
-    const { classes, className, children, ...rest } = this.props;
+const PortletToolbar = ({ classes, className, children, ...rest }) => {
+  const rootClassName = cn(classes.root, className);
 
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <div
-        {...rest}
-        className={rootClassName}
-      >
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div {...rest} className={rootClassName}>
+      {children}
+    </div>
+  );
+};
 
 PortletToolbar.propTypes = {
   children: PropTypes.node,

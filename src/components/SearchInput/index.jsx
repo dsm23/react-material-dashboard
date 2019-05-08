@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
@@ -14,28 +14,21 @@ import SearchIcon from '@material-ui/icons/Search';
 // Component styles
 import styles from './styles';
 
-class SearchInput extends Component {
-  render() {
-    const { classes, className, onChange, style, ...rest } = this.props;
+const SearchInput = ({ classes, className, onChange, style, ...rest }) => {
+  const rootClassName = cn(classes.root, className);
 
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <div
-        className={rootClassName}
-        style={style}
-      >
-        <SearchIcon className={classes.icon} />
-        <Input
-          {...rest}
-          className={classes.input}
-          disableUnderline
-          onChange={onChange}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={rootClassName} style={style}>
+      <SearchIcon className={classes.icon} />
+      <Input
+        {...rest}
+        className={classes.input}
+        disableUnderline
+        onChange={onChange}
+      />
+    </div>
+  );
+};
 
 SearchInput.propTypes = {
   className: PropTypes.string,

@@ -1,10 +1,16 @@
 {
-  "bracketSpacing": true,
-  "jsxBracketSameLine": true,
   "printWidth": 80,
-  "singleQuote": true,
-  "trailingComma": "none",
-  "tabWidth": 2,
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
   "useTabs": false,
-  "react/jsx-max-props-per-line": [1, { "when": "always" }]
+  "tabWidth": 2,
+  "filepath": "src",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "jsxBracketSameLine": false,
+  "jsxSingleQuote": false,
+  "parser": "babel",
+  "noSemi": true,
+  "rcVerbose": true,
 }

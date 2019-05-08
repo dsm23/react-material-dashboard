@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
@@ -23,28 +23,27 @@ const styles = theme => ({
   }
 });
 
-class PortletFooter extends Component {
-  render() {
-    const { classes, className, noDivider, children, ...rest } = this.props;
+const PortletFooter = ({
+  classes,
+  className,
+  noDivider,
+  children,
+  ...rest
+}) => {
+  const rootClassName = cn(
+    {
+      [classes.root]: true,
+      [classes.noDivider]: noDivider
+    },
+    className
+  );
 
-    const rootClassName = classNames(
-      {
-        [classes.root]: true,
-        [classes.noDivider]: noDivider
-      },
-      className
-    );
-
-    return (
-      <div
-        {...rest}
-        className={rootClassName}
-      >
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div {...rest} className={rootClassName}>
+      {children}
+    </div>
+  );
+};
 
 PortletFooter.propTypes = {
   children: PropTypes.node,
