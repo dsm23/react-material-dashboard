@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+// import { createBrowserHistory } from 'history';
 
 // Material helpers
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -13,17 +13,12 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 // Routes
 import Routes from './Routes';
 
-// Browser history
-const browserHistory = createBrowserHistory();
+const App = () => (
+  <MuiThemeProvider theme={theme}>
+    <Router>
+      <Routes />
+    </Router>
+  </MuiThemeProvider>
+);
 
-export default class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          <Routes />
-        </Router>
-      </MuiThemeProvider>
-    );
-  }
-}
+export default App;

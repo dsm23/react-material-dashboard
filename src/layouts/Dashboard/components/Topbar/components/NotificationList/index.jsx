@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
@@ -46,7 +46,7 @@ const icons = {
 };
 
 const NotificationList = ({ className, classes, notifications, onSelect }) => {
-  const rootClassName = classNames(classes.root, className);
+  const rootClassName = cn(classes.root, className);
 
   return (
     <div className={rootClassName}>

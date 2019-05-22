@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
@@ -23,58 +23,56 @@ import UsersTable from './components/UsersTable';
 // Component styles
 import styles from './style';
 
-class UserList extends Component {
-  signal = true;
+const UserList = ({ classes }) => {
+  const signal = useRef(true);
 
-  state = {
+  const [state, setState] = useState({
     isLoading: false,
     limit: 10,
     users: [],
     selectedUsers: [],
-    error: null
-  };
+    error: null,
+  });
 
-  async getUsers() {
+  const { isLoading, limit, users, selectedUsers, error } = state;
+
+  const makeFetch = useCallback(async limit => {
     try {
-      this.setState({ isLoading: true });
-
-      const { limit } = this.state;
+      setState(state => ({ ...state, isLoading: true }));
 
       const { users } = await getUsers(limit);
 
-      if (this.signal) {
-        this.setState({
+      if (signal.current) {
+        setState(state => ({
+          ...state,
           isLoading: false,
-          users
-        });
+          users,
+        }));
       }
     } catch (error) {
-      if (this.signal) {
-        this.setState({
+      if (signal.current) {
+        setState(state => ({
+          ...state,
           isLoading: false,
-          error
-        });
+          error,
+        }));
       }
     }
-  }
+  }, []);
 
-  componentDidMount() {
-    this.signal = true;
-    this.getUsers();
-  }
+  useEffect(() => {
+    signal.current = true;
+    makeFetch(limit);
+    return () => {
+      signal.current = false;
+    };
+  }, [limit, makeFetch]);
 
-  componentWillUnmount() {
-    this.signal = false;
-  }
-
-  handleSelect = selectedUsers => {
-    this.setState({ selectedUsers });
+  const handleSelect = selectedUsers => {
+    setState(state => ({ ...state, selectedUsers }));
   };
 
-  renderUsers() {
-    const { classes } = this.props;
-    const { isLoading, users, error } = this.state;
-
+  const renderUsers = () => {
     if (isLoading) {
       return (
         <div className={classes.progressWrapper}>
@@ -91,33 +89,22 @@ class UserList extends Component {
       return <Typography variant="h6">There are no users</Typography>;
     }
 
-    return (
-      <UsersTable
-        //
-        onSelect={this.handleSelect}
-        users={users}
-      />
-    );
-  }
+    return <UsersTable onSelect={handleSelect} users={users} />;
+  };
 
-  render() {
-    const { classes } = this.props;
-    const { selectedUsers } = this.state;
-
-    return (
-      <DashboardLayout title="Users">
-        <div className={classes.root}>
-          <UsersToolbar selectedUsers={selectedUsers} />
-          <div className={classes.content}>{this.renderUsers()}</div>
-        </div>
-      </DashboardLayout>
-    );
-  }
-}
+  return (
+    <DashboardLayout title="Users">
+      <div className={classes.root}>
+        <UsersToolbar selectedUsers={selectedUsers} />
+        <div className={classes.content}>{renderUsers()}</div>
+      </div>
+    </DashboardLayout>
+  );
+};
 
 UserList.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(UserList);

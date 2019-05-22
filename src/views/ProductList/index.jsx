@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // Externals
@@ -28,56 +28,60 @@ import ProductCard from './components/ProductCard';
 // Component styles
 import styles from './styles';
 
-class ProductList extends Component {
-  signal = true;
+const ProductList = ({ classes }) => {
+  const signalRef = useRef(true);
 
-  state = {
+  const [state, setState] = useState({
     isLoading: false,
     limit: 6,
     products: [],
     productsTotal: 0,
-    error: null
-  };
+    error: null,
+  });
 
-  async getProducts(limit) {
+  const makeFetch = useCallback(async limit => {
     try {
-      this.setState({ isLoading: true });
+      setState(state => ({
+        ...state,
+        isLoading: true,
+      }));
 
       const { products, productsTotal } = await getProducts(limit);
 
-      if (this.signal) {
-        this.setState({
+      if (signalRef.current) {
+        setState(state => ({
+          ...state,
           isLoading: false,
           products,
           productsTotal,
-          limit
-        });
+          limit,
+        }));
       }
     } catch (error) {
-      if (this.signal) {
-        this.setState({
+      if (signalRef.current) {
+        setState(state => ({
+          ...state,
           isLoading: false,
-          error
-        });
+          error,
+        }));
       }
     }
-  }
+  }, []);
 
-  componentWillMount() {
-    this.signal = true;
+  const { limit } = state;
 
-    const { limit } = this.state;
+  useEffect(() => {
+    signalRef.current = true;
 
-    this.getProducts(limit);
-  }
+    makeFetch(limit);
 
-  componentWillUnmount() {
-    this.signal = false;
-  }
+    return () => {
+      signalRef.current = false;
+    };
+  }, [limit, makeFetch]);
 
-  renderProducts() {
-    const { classes } = this.props;
-    const { isLoading, products } = this.state;
+  const renderProducts = () => {
+    const { isLoading, products } = state;
 
     if (isLoading) {
       return (
@@ -94,18 +98,9 @@ class ProductList extends Component {
     }
 
     return (
-      <Grid
-        container
-        spacing={24}
-      >
+      <Grid container spacing={24}>
         {products.map(product => (
-          <Grid
-            item
-            key={product.id}
-            lg={4}
-            md={6}
-            xs={12}
-          >
+          <Grid item key={product.id} lg={4} md={6} xs={12}>
             <Link to="#">
               <ProductCard product={product} />
             </Link>
@@ -113,33 +108,29 @@ class ProductList extends Component {
         ))}
       </Grid>
     );
-  }
+  };
 
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <DashboardLayout title="Products">
-        <div className={classes.root}>
-          <ProductsToolbar />
-          <div className={classes.content}>{this.renderProducts()}</div>
-          <div className={classes.pagination}>
-            <Typography variant="caption">1-6 of 20</Typography>
-            <IconButton>
-              <ChevronLeftOutlinedIcon />
-            </IconButton>
-            <IconButton>
-              <ChevronRightOutlinedIcon />
-            </IconButton>
-          </div>
+  return (
+    <DashboardLayout title="Products">
+      <div className={classes.root}>
+        <ProductsToolbar />
+        <div className={classes.content}>{renderProducts()}</div>
+        <div className={classes.pagination}>
+          <Typography variant="caption">1-6 of 20</Typography>
+          <IconButton>
+            <ChevronLeftOutlinedIcon />
+          </IconButton>
+          <IconButton>
+            <ChevronRightOutlinedIcon />
+          </IconButton>
         </div>
-      </DashboardLayout>
-    );
-  }
-}
+      </div>
+    </DashboardLayout>
+  );
+};
 
 ProductList.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ProductList);

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
 // Externals
@@ -29,135 +29,127 @@ import NotificationList from './components/NotificationList';
 // Component styles
 import styles from './styles';
 
-class Topbar extends Component {
-  signal = true;
+const Topbar = ({
+  classes,
+  className,
+  history,
+  title,
+  isSidebarOpen,
+  onToggleSidebar,
+}) => {
+  const signal = useRef(true);
 
-  state = {
+  const [state, setState] = useState({
     notifications: [],
     notificationsLimit: 4,
     notificationsCount: 0,
-    notificationsEl: null
-  };
+    notificationsEl: null,
+  });
 
-  async getNotifications() {
+  const { notificationsLimit } = state;
+
+  const makeFetch = useCallback(async notificationsLimit => {
     try {
-      const { notificationsLimit } = this.state;
-
       const { notifications, notificationsCount } = await getNotifications(
-        notificationsLimit
+        notificationsLimit,
       );
 
-      if (this.signal) {
-        this.setState({
+      if (signal.current) {
+        setState(state => ({
+          ...state,
           notifications,
-          notificationsCount
-        });
+          notificationsCount,
+        }));
       }
     } catch (error) {
       return;
     }
-  }
+  }, []);
 
-  componentDidMount() {
-    this.signal = true;
-    this.getNotifications();
-  }
+  useEffect(() => {
+    signal.current = true;
+    makeFetch(notificationsLimit);
+    return () => {
+      signal.current = false;
+    };
+  }, [makeFetch, notificationsLimit]);
 
-  componentWillUnmount() {
-    this.signal = false;
-  }
-
-  handleSignOut = () => {
-    const { history } = this.props;
-
+  const handleSignOut = () => {
     localStorage.setItem('isAuthenticated', false);
     history.push('/sign-in');
   };
 
-  handleShowNotifications = event => {
-    this.setState({
-      notificationsEl: event.currentTarget
-    });
+  const handleShowNotifications = e => {
+    setState(state => ({
+      ...state,
+      notificationsEl: e.currentTarget,
+    }));
   };
 
-  handleCloseNotifications = () => {
-    this.setState({
-      notificationsEl: null
-    });
+  const handleCloseNotifications = () => {
+    setState(state => ({
+      ...state,
+      notificationsEl: null,
+    }));
   };
 
-  render() {
-    const {
-      classes,
-      className,
-      title,
-      isSidebarOpen,
-      onToggleSidebar
-    } = this.props;
-    const { notifications, notificationsCount, notificationsEl } = this.state;
+  const { notifications, notificationsCount, notificationsEl } = state;
 
-    const rootClassName = classNames(classes.root, className);
-    const showNotifications = Boolean(notificationsEl);
+  const rootClassName = classNames(classes.root, className);
+  const showNotifications = Boolean(notificationsEl);
 
-    return (
-      <Fragment>
-        <div className={rootClassName}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              className={classes.menuButton}
-              onClick={onToggleSidebar}
-              variant="text"
+  return (
+    <>
+      <div className={rootClassName}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            className={classes.menuButton}
+            onClick={onToggleSidebar}
+            variant="text"
+          >
+            {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
+          <Typography className={classes.title} variant="h4">
+            {title}
+          </Typography>
+          <IconButton
+            className={classes.notificationsButton}
+            onClick={handleShowNotifications}
+          >
+            <Badge
+              badgeContent={notificationsCount}
+              color="primary"
+              variant="dot"
             >
-              {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
-            </IconButton>
-            <Typography
-              className={classes.title}
-              variant="h4"
-            >
-              {title}
-            </Typography>
-            <IconButton
-              className={classes.notificationsButton}
-              onClick={this.handleShowNotifications}
-            >
-              <Badge
-                badgeContent={notificationsCount}
-                color="primary"
-                variant="dot"
-              >
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              className={classes.signOutButton}
-              onClick={this.handleSignOut}
-            >
-              <SignoutIcon />
-            </IconButton>
-          </Toolbar>
-        </div>
-        <Popover
-          anchorEl={notificationsEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }}
-          onClose={this.handleCloseNotifications}
-          open={showNotifications}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center'
-          }}
-        >
-          <NotificationList
-            notifications={notifications}
-            onSelect={this.handleCloseNotifications}
-          />
-        </Popover>
-      </Fragment>
-    );
-  }
-}
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <IconButton className={classes.signOutButton} onClick={handleSignOut}>
+            <SignoutIcon />
+          </IconButton>
+        </Toolbar>
+      </div>
+      <Popover
+        anchorEl={notificationsEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        onClose={handleCloseNotifications}
+        open={showNotifications}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <NotificationList
+          notifications={notifications}
+          onSelect={handleCloseNotifications}
+        />
+      </Popover>
+    </>
+  );
+};
 
 Topbar.propTypes = {
   className: PropTypes.string,
@@ -165,14 +157,14 @@ Topbar.propTypes = {
   history: PropTypes.object.isRequired,
   isSidebarOpen: PropTypes.bool,
   onToggleSidebar: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.string,
 };
 
 Topbar.defaultProps = {
-  onToggleSidebar: () => {}
+  onToggleSidebar: () => {},
 };
 
 export default compose(
   withRouter,
-  withStyles(styles)
+  withStyles(styles),
 )(Topbar);

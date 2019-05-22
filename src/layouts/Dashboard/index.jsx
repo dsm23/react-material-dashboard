@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { useState } from 'react';
 
 // Externals
-import classNames from 'classnames';
+import cn from 'classnames';
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 
@@ -20,76 +20,57 @@ import Footer from './components/Footer';
 // Component styles
 import styles from './styles';
 
-class DashboardLayout extends Component {
-  constructor(props) {
-    super(props);
+const DashboardLayout = ({ classes, width, title, children }) => {
+  const isMobile = ['xs', 'sm', 'md'].includes(width);
 
-    const isMobile = ['xs', 'sm', 'md'].includes(props.width);
+  const [isOpen, setOpen] = useState(!isMobile);
 
-    this.state = {
-      isOpen: !isMobile
-    };
-  }
+  const handleClose = () => setOpen(false);
 
-  handleClose = () => {
-    this.setState({ isOpen: false });
-  };
+  const handleToggleOpen = () => setOpen(!isOpen);
 
-  handleToggleOpen = () => {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
-  };
+  const shiftComponents = isOpen && !isMobile;
 
-  render() {
-    const { classes, width, title, children } = this.props;
-    const { isOpen } = this.state;
-
-    const isMobile = ['xs', 'sm', 'md'].includes(width);
-    const shiftTopbar = isOpen && !isMobile;
-    const shiftContent = isOpen && !isMobile;
-
-    return (
-      <Fragment>
-        <Topbar
-          className={classNames(classes.topbar, {
-            [classes.topbarShift]: shiftTopbar
-          })}
-          isSidebarOpen={isOpen}
-          onToggleSidebar={this.handleToggleOpen}
-          title={title}
-        />
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.drawerPaper }}
-          onClose={this.handleClose}
-          open={isOpen}
-          variant={isMobile ? 'temporary' : 'persistent'}
-        >
-          <Sidebar className={classes.sidebar} />
-        </Drawer>
-        <main
-          className={classNames(classes.content, {
-            [classes.contentShift]: shiftContent
-          })}
-        >
-          {children}
-          <Footer />
-        </main>
-      </Fragment>
-    );
-  }
-}
+  return (
+    <>
+      <Topbar
+        className={cn(classes.topbar, {
+          [classes.topbarShift]: shiftComponents,
+        })}
+        isSidebarOpen={isOpen}
+        onToggleSidebar={handleToggleOpen}
+        title={title}
+      />
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.drawerPaper }}
+        onClose={handleClose}
+        open={isOpen}
+        variant={isMobile ? 'temporary' : 'persistent'}
+      >
+        <Sidebar className={classes.sidebar} />
+      </Drawer>
+      <main
+        className={cn(classes.content, {
+          [classes.contentShift]: shiftComponents,
+        })}
+      >
+        {children}
+        <Footer />
+      </main>
+    </>
+  );
+};
 
 DashboardLayout.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   title: PropTypes.string,
-  width: PropTypes.string.isRequired
+  width: PropTypes.string.isRequired,
 };
 
 export default compose(
   withStyles(styles),
-  withWidth()
+  withWidth(),
 )(DashboardLayout);

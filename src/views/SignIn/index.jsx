@@ -31,31 +31,28 @@ import styles from './styles';
 import schema from './schema';
 
 // Service methods
-const signIn = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
+const signIn = () =>
+  new Promise(resolve => {
+    setTimeout(resolve, 1500);
   });
-};
 
 class SignIn extends Component {
   state = {
     values: {
       email: '',
-      password: ''
+      password: '',
     },
     touched: {
       email: false,
-      password: false
+      password: false,
     },
     errors: {
       email: null,
-      password: null
+      password: null,
     },
     isValid: false,
     isLoading: false,
-    submitError: null
+    submitError: null,
   };
 
   handleBack = () => {
@@ -101,7 +98,7 @@ class SignIn extends Component {
     } catch (error) {
       this.setState({
         isLoading: false,
-        serviceError: error
+        serviceError: error,
       });
     }
   };
@@ -114,7 +111,7 @@ class SignIn extends Component {
       errors,
       isValid,
       submitError,
-      isLoading
+      isLoading,
     } = this.state;
 
     const showEmailError = touched.email && errors.email;
@@ -122,47 +119,26 @@ class SignIn extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid
-          className={classes.grid}
-          container
-        >
-          <Grid
-            className={classes.quoteWrapper}
-            item
-            lg={5}
-          >
+        <Grid className={classes.grid} container>
+          <Grid className={classes.quoteWrapper} item lg={5}>
             <div className={classes.quote}>
               <div className={classes.quoteInner}>
-                <Typography
-                  className={classes.quoteText}
-                  variant="h1"
-                >
+                <Typography className={classes.quoteText} variant="h1">
                   Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
                   they sold out High Life.
                 </Typography>
                 <div className={classes.person}>
-                  <Typography
-                    className={classes.name}
-                    variant="body1"
-                  >
+                  <Typography className={classes.name} variant="body1">
                     Takamaru Ayako
                   </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="body2"
-                  >
+                  <Typography className={classes.bio} variant="body2">
                     Manager at inVision
                   </Typography>
                 </div>
               </div>
             </div>
           </Grid>
-          <Grid
-            className={classes.content}
-            item
-            lg={7}
-            xs={12}
-          >
+          <Grid className={classes.content} item lg={7} xs={12}>
             <div className={classes.content}>
               <div className={classes.contentHeader}>
                 <IconButton
@@ -174,16 +150,10 @@ class SignIn extends Component {
               </div>
               <div className={classes.contentBody}>
                 <form className={classes.form}>
-                  <Typography
-                    className={classes.title}
-                    variant="h2"
-                  >
+                  <Typography className={classes.title} variant="h2">
                     Sign in
                   </Typography>
-                  <Typography
-                    className={classes.subtitle}
-                    variant="body1"
-                  >
+                  <Typography className={classes.subtitle} variant="body1">
                     Sign in with social media
                   </Typography>
                   <Button
@@ -194,7 +164,7 @@ class SignIn extends Component {
                     variant="contained"
                   >
                     <FacebookIcon className={classes.facebookIcon} />
-                    Login with Facebook
+                    Login with Facebook (not currently working)
                   </Button>
                   <Button
                     className={classes.googleButton}
@@ -203,12 +173,9 @@ class SignIn extends Component {
                     variant="contained"
                   >
                     <GoogleIcon className={classes.googleIcon} />
-                    Login with Google
+                    Login with Google (not currently working)
                   </Button>
-                  <Typography
-                    className={classes.sugestion}
-                    variant="body1"
-                  >
+                  <Typography className={classes.sugestion} variant="body1">
                     or login with email address
                   </Typography>
                   <div className={classes.fields}>
@@ -252,10 +219,7 @@ class SignIn extends Component {
                     )}
                   </div>
                   {submitError && (
-                    <Typography
-                      className={classes.submitError}
-                      variant="body2"
-                    >
+                    <Typography className={classes.submitError} variant="body2">
                       {submitError}
                     </Typography>
                   )}
@@ -273,15 +237,9 @@ class SignIn extends Component {
                       Sign in now
                     </Button>
                   )}
-                  <Typography
-                    className={classes.signUp}
-                    variant="body1"
-                  >
+                  <Typography className={classes.signUp} variant="body1">
                     Don't have an account?{' '}
-                    <Link
-                      className={classes.signUpUrl}
-                      to="/sign-up"
-                    >
+                    <Link className={classes.signUpUrl} to="/sign-up">
                       Sign up
                     </Link>
                   </Typography>
@@ -298,10 +256,10 @@ class SignIn extends Component {
 SignIn.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 };
 
 export default compose(
   withRouter,
-  withStyles(styles)
+  withStyles(styles),
 )(SignIn);

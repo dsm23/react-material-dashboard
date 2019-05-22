@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import classNames from 'classnames';
@@ -7,9 +7,13 @@ import PropTypes from 'prop-types';
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
 
+import { Form, Field } from 'react-final-form';
+
 // Material components
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
+
+import { TextField } from 'final-form-material-ui';
 
 // Shared components
 import Portlet from 'components/Portlet';
@@ -24,141 +28,129 @@ import styles from './styles';
 const states = [
   {
     value: 'alabama',
-    label: 'Alabama'
+    label: 'Alabama',
   },
   {
     value: 'new-york',
-    label: 'New York'
+    label: 'New York',
   },
   {
     value: 'san-francisco',
-    label: 'San Francisco'
-  }
+    label: 'San Francisco',
+  },
 ];
 
-class Account extends Component {
-  state = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'contact@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  };
+const onSubmit = async values => {
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  await sleep(300);
+  window.alert(JSON.stringify(values, 0, 2));
+};
 
-  handleChange = e => {
-    this.setState({
-      state: e.target.value
-    });
-  };
+const Account = ({ classes, className, ...rest }) => {
+  const rootClassName = classNames(classes.root, className);
 
-  render() {
-    const { classes, className, ...rest } = this.props;
-    const { firstName, lastName, phone, state, country, email } = this.state;
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
-        <PortletHeader>
-          <PortletLabel
-            subtitle="The information can be edited"
-            title="Profile"
-          />
-        </PortletHeader>
-        <PortletContent noPadding>
-          <form
-            autoComplete="off"
-            noValidate
-          >
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                helperText="Please specify the first name"
-                label="First name"
-                margin="dense"
-                required
-                value={firstName}
-                variant="outlined"
+  return (
+    <Portlet {...rest} className={rootClassName}>
+      <Form onSubmit={onSubmit}>
+        {({ values, handleSubmit }) => (
+          <form autoComplete="off" onSubmit={handleSubmit} noValidate>
+            <PortletHeader>
+              <PortletLabel
+                subtitle="The information can be edited"
+                title="Profile"
               />
-              <TextField
-                className={classes.textField}
-                label="Last name"
-                margin="dense"
-                required
-                value={lastName}
-                variant="outlined"
-              />
-            </div>
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                label="Email Address"
-                margin="dense"
-                required
-                value={email}
-                variant="outlined"
-              />
-              <TextField
-                className={classes.textField}
-                label="Phone Number"
-                margin="dense"
-                type="number"
-                value={phone}
-                variant="outlined"
-              />
-            </div>
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                label="Select State"
-                margin="dense"
-                onChange={this.handleChange}
-                required
-                select
-                SelectProps={{
-                  native: true
-                }}
-                value={state}
-                variant="outlined">
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-              <TextField
-                className={classes.textField}
-                label="Country"
-                margin="dense"
-                required
-                value={country}
-                variant="outlined"
-              />
-            </div>
+            </PortletHeader>
+            <PortletContent noPadding>
+              <div className={classes.field}>
+                <Field
+                  name="firstName"
+                  component={TextField}
+                  className={classes.textField}
+                  helperText="Please specify the first name"
+                  label="First name"
+                  margin="dense"
+                  required
+                  variant="outlined"
+                />
+                <Field
+                  name="lastName"
+                  component={TextField}
+                  className={classes.textField}
+                  label="Last name"
+                  margin="dense"
+                  required
+                  variant="outlined"
+                />
+              </div>
+              <div className={classes.field}>
+                <Field
+                  name="email"
+                  component={TextField}
+                  className={classes.textField}
+                  label="Email Address"
+                  margin="dense"
+                  required
+                  variant="outlined"
+                />
+                <Field
+                  name="phoneNumber"
+                  component={TextField}
+                  className={classes.textField}
+                  label="Phone Number"
+                  margin="dense"
+                  type="number"
+                  variant="outlined"
+                />
+              </div>
+              <div className={classes.field}>
+                <Field
+                  name="state"
+                  component={TextField}
+                  className={classes.textField}
+                  label="Select State"
+                  margin="dense"
+                  required
+                  select
+                  SelectProps={{
+                    native: true,
+                  }}
+                  variant="outlined"
+                >
+                  {states.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Field>
+                <Field
+                  name="country"
+                  component={TextField}
+                  className={classes.textField}
+                  label="Country"
+                  margin="dense"
+                  required
+                  variant="outlined"
+                />
+              </div>
+              {process.env.NODE_ENV === 'development' && (
+                <pre>{JSON.stringify(values, null, 2)}</pre>
+              )}
+            </PortletContent>
+            <PortletFooter className={classes.portletFooter}>
+              <Button color="primary" variant="contained" type="submit">
+                Save details
+              </Button>
+            </PortletFooter>
           </form>
-        </PortletContent>
-        <PortletFooter className={classes.portletFooter}>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Save details
-          </Button>
-        </PortletFooter>
-      </Portlet>
-    );
-  }
-}
+        )}
+      </Form>
+    </Portlet>
+  );
+};
 
 Account.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Account);

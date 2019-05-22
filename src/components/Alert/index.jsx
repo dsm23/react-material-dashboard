@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
@@ -28,60 +28,54 @@ const getIconForIntent = intent =>
     danger: <ErrorIcon />,
   }[intent]);
 
-class Alert extends Component {
-  render() {
-    const {
-      classes,
-      className,
-      intent,
-      hasIcon,
-      isRemoveable,
-      title,
-      description,
-      onRemove,
-      ...rest
-    } = this.props;
+const Alert = ({
+  classes,
+  className,
+  intent,
+  hasIcon,
+  isRemoveable,
+  title,
+  description,
+  onRemove,
+  ...rest
+}) => {
+  const rootClassName = cn(
+    {
+      [classes.root]: true,
+      [classes[intent]]: intent,
+    },
+    className,
+  );
 
-    const rootClassName = classNames(
-      {
-        [classes.root]: true,
-        [classes[intent]]: intent,
-      },
-      className,
-    );
-
-    return (
-      <div {...rest} className={rootClassName}>
-        {hasIcon && (
-          <div className={{}}>
-            <span className={classes.intentIcon}>
-              {getIconForIntent(intent)}
-            </span>
-          </div>
-        )}
-        <div className={classes.content}>
-          {title && (
-            <Typography className={classes.title} variant="h5">
-              {title}
-            </Typography>
-          )}
-          {description && (
-            <Typography className={classes.description} variant="subtitle2">
-              {description}
-            </Typography>
-          )}
+  return (
+    <div {...rest} className={rootClassName}>
+      {hasIcon && (
+        <div className={{}}>
+          <span className={classes.intentIcon}>{getIconForIntent(intent)}</span>
         </div>
-        {isRemoveable && (
-          <div className={classes.remove}>
-            <IconButton onClick={onRemove}>
-              <CloseIcon className={classes.removeIcon} />
-            </IconButton>
-          </div>
+      )}
+      <div className={classes.content}>
+        {title && (
+          <Typography className={classes.title} variant="h5">
+            {title}
+          </Typography>
+        )}
+        {description && (
+          <Typography className={classes.description} variant="subtitle2">
+            {description}
+          </Typography>
         )}
       </div>
-    );
-  }
-}
+      {isRemoveable && (
+        <div className={classes.remove}>
+          <IconButton onClick={onRemove}>
+            <CloseIcon className={classes.removeIcon} />
+          </IconButton>
+        </div>
+      )}
+    </div>
+  );
+};
 
 Alert.propTypes = {
   children: PropTypes.node,

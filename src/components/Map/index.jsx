@@ -6,7 +6,7 @@ import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
-  Marker
+  Marker,
 } from 'react-google-maps';
 
 // Google API Key
@@ -20,18 +20,16 @@ export default compose(
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${KEY}&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '600px' }} />,
-    mapElement: <div style={{ height: '100%' }} />
+    mapElement: <div style={{ height: '100%' }} />,
   }),
   withScriptjs,
-  withGoogleMap
-)(props => (
+  withGoogleMap,
+)(({ isMarkerShown }) => (
   <GoogleMap
     defaultCenter={{ lat: 41.22199, lng: -72.655945 }}
     defaultOptions={{ styles }}
     defaultZoom={8}
   >
-    {props.isMarkerShown && (
-      <Marker position={{ lat: 41.22199, lng: -72.655945 }} />
-    )}
+    {isMarkerShown && <Marker position={{ lat: 41.22199, lng: -72.655945 }} />}
   </GoogleMap>
 ));

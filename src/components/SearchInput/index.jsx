@@ -14,11 +14,11 @@ import SearchIcon from '@material-ui/icons/Search';
 // Component styles
 import styles from './styles';
 
-const SearchInput = ({ classes, className, onChange, style, ...rest }) => {
+const SearchInput = ({ classes, className, onChange, ...rest }) => {
   const rootClassName = cn(classes.root, className);
 
   return (
-    <div className={rootClassName} style={style}>
+    <div className={rootClassName}>
       <SearchIcon className={classes.icon} />
       <Input
         {...rest}
@@ -34,11 +34,11 @@ SearchInput.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   onChange: PropTypes.func,
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
 SearchInput.defaultProps = {
-  onChange: () => {}
+  onChange: () => {},
 };
 
 export default withStyles(styles)(SearchInput);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import classNames from 'classnames';
@@ -18,46 +18,33 @@ import Paper from 'components/Paper';
 // Component styles
 import styles from './styles';
 
-class Users extends Component {
-  render() {
-    const { classes, className, ...rest } = this.props;
+const Users = ({ classes, className, ...rest }) => {
+  const rootClassName = classNames(classes.root, className);
 
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <Paper
-        {...rest}
-        className={rootClassName}
-      >
-        <div className={classes.content}>
-          <Typography
-            className={classes.title}
-            variant="body2"
-          >
-            TOTAL USERS
+  return (
+    <Paper {...rest} className={rootClassName}>
+      <div className={classes.content}>
+        <Typography className={classes.title} variant="body2">
+          TOTAL USERS
+        </Typography>
+        <div className={classes.details}>
+          <Typography variant="h3">1600</Typography>
+          <Typography className={classes.difference} variant="body2">
+            <ArrowDropDownIcon />
+            16%
           </Typography>
-          <div className={classes.details}>
-            <Typography variant="h3">1600</Typography>
-            <Typography
-              className={classes.difference}
-              variant="body2"
-            >
-              <ArrowDropDownIcon />
-              16%
-            </Typography>
-          </div>
         </div>
-        <div className={classes.iconWrapper}>
-          <PeopleOutlinedIcon className={classes.icon} />
-        </div>
-      </Paper>
-    );
-  }
-}
+      </div>
+      <div className={classes.iconWrapper}>
+        <PeopleOutlinedIcon className={classes.icon} />
+      </div>
+    </Paper>
+  );
+};
 
 Users.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Users);

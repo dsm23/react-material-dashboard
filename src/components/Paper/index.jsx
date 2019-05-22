@@ -23,9 +23,14 @@ const styles = theme => ({
   },
 });
 
-const CustomPaper = props => {
-  const { classes, className, outlined, squared, children, ...rest } = props;
-
+const CustomPaper = ({
+  classes,
+  className,
+  outlined,
+  squared,
+  children,
+  ...rest
+}) => {
   const rootClassName = cn(
     {
       [classes.root]: true,

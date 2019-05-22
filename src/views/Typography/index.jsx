@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
@@ -15,22 +15,22 @@ import DashboardLayout from 'layouts/Dashboard';
 // Component styles
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 4
+    padding: theme.spacing.unit * 4,
   },
   row: {
     display: 'flex',
     // flexWrap: 'wrap',
     alignItems: 'center',
-    marginBottom: '50px'
+    marginBottom: '50px',
   },
   caption: {
     flexBasis: '320px',
     flexShrink: 0,
-    flexGrow: 0
+    flexGrow: 0,
   },
   example: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 });
 
 const variants = {
@@ -47,43 +47,28 @@ const variants = {
   body2:
     'Justo proin curabitur dictumst semper auctor, consequat tempor, nostra aenean neque turpis nunc. Leo. Sapien aliquet facilisi turpis, elit facilisi praesent porta metus leo. Dignissim amet dis nec ac integer inceptos erat dis Turpis sodales ad torquent. Dolor, erat convallis.',
   caption: 'Accumsan leo pretium conubia ullamcorper.',
-  button: 'Vivamus ultrices rutrum fames dictumst'
+  button: 'Vivamus ultrices rutrum fames dictumst',
 };
 
-class Typography extends Component {
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <DashboardLayout title="Typography">
-        <div className={classes.root}>
-          {Object.keys(variants).map((key, i) => (
-            <div
-              className={classes.row}
-              key={i}
-            >
-              <TypographyC
-                className={classes.caption}
-                variant="caption"
-              >
-                {key}
-              </TypographyC>
-              <TypographyC
-                className={classes.example}
-                variant={key}
-              >
-                {variants[key]}
-              </TypographyC>
-            </div>
-          ))}
+const Typography = ({ classes }) => (
+  <DashboardLayout title="Typography">
+    <div className={classes.root}>
+      {Object.keys(variants).map((key, i) => (
+        <div className={classes.row} key={i}>
+          <TypographyC className={classes.caption} variant="caption">
+            {key}
+          </TypographyC>
+          <TypographyC className={classes.example} variant={key}>
+            {variants[key]}
+          </TypographyC>
         </div>
-      </DashboardLayout>
-    );
-  }
-}
+      ))}
+    </div>
+  </DashboardLayout>
+);
 
 Typography.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Typography);

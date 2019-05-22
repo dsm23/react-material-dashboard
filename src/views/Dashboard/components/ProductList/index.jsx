@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 // Externals
@@ -37,7 +37,7 @@ class ProductList extends Component {
     limit: 4,
     products: [],
     productsTotal: 0,
-    error: null
+    error: null,
   };
 
   async getProducts() {
@@ -52,14 +52,14 @@ class ProductList extends Component {
         this.setState({
           isLoading: false,
           products,
-          productsTotal
+          productsTotal,
         });
       }
     } catch (error) {
       if (this.signal) {
         this.setState({
           isLoading: false,
-          error
+          error,
         });
       }
     }
@@ -94,32 +94,24 @@ class ProductList extends Component {
     }
 
     return (
-      <Fragment>
+      <>
         {products.map((product, i) => (
-          <div
-            className={classes.product}
-            key={i}
-          >
+          <div className={classes.product} key={i}>
             <div className={classes.productImageWrapper}>
               <img
                 alt="Product Name"
                 className={classes.productImage}
                 src={product.imageUrl}
               />
+              Placeholder
             </div>
             <div className={classes.productDetails}>
               <Link to={`/products/${product.id}`}>
-                <Typography
-                  className={classes.productTitle}
-                  variant="h5"
-                >
+                <Typography className={classes.productTitle} variant="h5">
                   {product.title}
                 </Typography>
               </Link>
-              <Typography
-                className={classes.productTimestamp}
-                variant="body2"
-              >
+              <Typography className={classes.productTimestamp} variant="body2">
                 Updated 5hr ago
               </Typography>
             </div>
@@ -130,7 +122,7 @@ class ProductList extends Component {
             </div>
           </div>
         ))}
-      </Fragment>
+      </>
     );
   }
 
@@ -141,10 +133,7 @@ class ProductList extends Component {
     const rootClassName = classNames(classes.root, className);
 
     return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
+      <Portlet {...rest} className={rootClassName}>
         <PortletHeader noDivider>
           <PortletLabel
             subtitle={`${productsTotal} in total`}
@@ -155,10 +144,7 @@ class ProductList extends Component {
           {this.renderProducts()}
         </PortletContent>
         <PortletFooter className={classes.portletFooter}>
-          <Button
-            color="primary"
-            variant="text"
-          >
+          <Button color="primary" variant="text">
             View all <ArrowRightIcon />
           </Button>
         </PortletFooter>
@@ -169,7 +155,7 @@ class ProductList extends Component {
 
 ProductList.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ProductList);

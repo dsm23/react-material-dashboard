@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
@@ -19,50 +19,27 @@ import AccountDetails from './components/AccountDetails';
 // Component styles
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 4
-  }
+    padding: theme.spacing.unit * 4,
+  },
 });
 
-class Account extends Component {
-  state = { tabIndex: 0 };
-
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <DashboardLayout title="Account">
-        <div className={classes.root}>
-          <Grid
-            container
-            spacing={32}
-          >
-            <Grid
-              item
-              lg={4}
-              md={6}
-              xl={4}
-              xs={12}
-            >
-              <AccountProfile />
-            </Grid>
-            <Grid
-              item
-              lg={8}
-              md={6}
-              xl={8}
-              xs={12}
-            >
-              <AccountDetails />
-            </Grid>
-          </Grid>
-        </div>
-      </DashboardLayout>
-    );
-  }
-}
+const Account = ({ classes }) => (
+  <DashboardLayout title="Account">
+    <div className={classes.root}>
+      <Grid container spacing={32}>
+        <Grid item lg={4} md={6} xl={4} xs={12}>
+          <AccountProfile />
+        </Grid>
+        <Grid item lg={8} md={6} xl={8} xs={12}>
+          <AccountDetails />
+        </Grid>
+      </Grid>
+    </div>
+  </DashboardLayout>
+);
 
 Account.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Account);

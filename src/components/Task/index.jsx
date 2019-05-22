@@ -19,18 +19,16 @@ import styles from './styles';
 const statusColors = {
   pending: 'neutral',
   progress: 'warning',
-  done: 'success'
+  done: 'success',
 };
 
-const Task = props => {
-  const { classes, className, title, desc, status, color, ...rest } = props;
-
+const Task = ({ classes, className, title, desc, status, color, ...rest }) => {
   const rootClassName = cn(
     {
       [classes.root]: true,
-      [classes[color]]: color
+      [classes[color]]: color,
     },
-    className
+    className,
   );
 
   return (
@@ -50,12 +48,12 @@ Task.propTypes = {
   color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
   desc: PropTypes.string.isRequired,
   status: PropTypes.oneOf(['pending', 'progress', 'done']),
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 Task.defaultProps = {
   color: 'primary',
-  status: 'pending'
+  status: 'pending',
 };
 
 export default withStyles(styles)(Task);
