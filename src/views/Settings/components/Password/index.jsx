@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles';
 
 // Material components
-import TextField from '@material-ui/core/TextField/index';
+//import TextField from '@material-ui/core/TextField/index';
 import Button from '@material-ui/core/Button';
+import { TextField } from 'final-form-material-ui';
+
+import { Form, Field } from 'react-final-form';
 
 // Shared components
 import Portlet from 'components/Portlet';
@@ -18,84 +21,70 @@ import PortletLabel from 'components/PortletLabel';
 import PortletContent from 'components/PortletContent';
 import PortletFooter from 'components/PortletFooter';
 
+import { required } from 'common/validators';
+
 // Component styles
 import styles from './styles';
 
-class Password extends Component {
-  state = {
-    values: {
-      password: '',
-      confirm: ''
-    }
-  };
-
-  handleFieldChange = (field, value) => {
-    const newState = { ...this.state };
-
-    newState.values[field] = value;
-
-    this.setState(newState, this.validateForm);
-  };
-
-  render() {
-    const { classes, className, ...rest } = this.props;
-    const { values } = this.state;
-
-    const rootClassName = classNames(classes.root, className);
-
-    return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
-        <PortletHeader>
-          <PortletLabel
-            subtitle="Update password"
-            title="Password"
-          />
-        </PortletHeader>
-        <PortletContent>
-          <form className={classes.form}>
-            <TextField
-              className={classes.textField}
-              label="Password"
-              name="password"
-              onChange={event =>
-                this.handleFieldChange('password', event.target.value)
-              }
-              type="password"
-              value={values.password}
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              label="Confirm password"
-              name="confirm"
-              onChange={event =>
-                this.handleFieldChange('confirm', event.target.value)
-              }
-              type="password"
-              value={values.confirm}
-              variant="outlined"
-            />
-          </form>
-        </PortletContent>
-        <PortletFooter className={classes.portletFooter}>
-          <Button
-            color="primary"
-            variant="outlined"
-          >
-            Update
-          </Button>
-        </PortletFooter>
-      </Portlet>
-    );
+const validate = values => {
+  const errors = {};
+  if (values.password !== values.confirm) {
+    errors.confirm = 'Two fields must match';
   }
-}
+  return errors;
+};
+
+const Password = ({ classes, className, ...rest }) => {
+  const rootClassName = cn(classes.root, className);
+
+  return (
+    <Portlet {...rest} className={rootClassName}>
+      <Form onSubmit={() => {}} validate={validate}>
+        {({ values, handleSubmit }) => (
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <PortletHeader>
+              <PortletLabel subtitle="Update password" title="Password" />
+            </PortletHeader>
+            <PortletContent>
+              <Field
+                className={classes.textField}
+                component={TextField}
+                label="Password"
+                name="password"
+                type="password"
+                variant="outlined"
+                validate={required}
+                required
+              />
+              <Field
+                className={classes.textField}
+                component={TextField}
+                label="Confirm password"
+                name="confirm"
+                type="password"
+                variant="outlined"
+                validate={required}
+                required
+              />
+            </PortletContent>
+            <PortletFooter className={classes.portletFooter}>
+              <Button color="primary" variant="outlined" type="submit">
+                Update
+              </Button>
+            </PortletFooter>
+            {process.env.NODE_ENV === 'development' && (
+              <pre>{JSON.stringify(values, null, 2)}</pre>
+            )}
+          </form>
+        )}
+      </Form>
+    </Portlet>
+  );
+};
 
 Password.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Password);

@@ -51,7 +51,17 @@ const Account = ({ classes, className, ...rest }) => {
 
   return (
     <Portlet {...rest} className={rootClassName}>
-      <Form onSubmit={onSubmit}>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={{
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'contact@devias.io',
+          phone: '',
+          state: 'Alabama',
+          country: 'USA',
+        }}
+      >
         {({ values, handleSubmit }) => (
           <form autoComplete="off" onSubmit={handleSubmit} noValidate>
             <PortletHeader>
@@ -93,7 +103,7 @@ const Account = ({ classes, className, ...rest }) => {
                   variant="outlined"
                 />
                 <Field
-                  name="phoneNumber"
+                  name="phone"
                   component={TextField}
                   className={classes.textField}
                   label="Phone Number"

@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-// import { createBrowserHistory } from 'history';
 
 // Material helpers
 import { MuiThemeProvider } from '@material-ui/core/styles';

@@ -4,187 +4,83 @@ import { Link, withRouter } from 'react-router-dom';
 // Externals
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
-import validate from 'validate.js';
-import _ from 'underscore';
 
 // Material helpers
 import { withStyles } from '@material-ui/core/styles/index';
 
 // Material components
 import Button from '@material-ui/core/Button/index';
-import Checkbox from '@material-ui/core/Checkbox/index';
+// import Checkbox from '@material-ui/core/Checkbox/index';
 import CircularProgress from '@material-ui/core/CircularProgress/index';
 import Grid from '@material-ui/core/Grid/index';
 import IconButton from '@material-ui/core/IconButton/index';
-import TextField from '@material-ui/core/TextField/index';
+// import TextField from '@material-ui/core/TextField/index';
 import Typography from '@material-ui/core/Typography/index';
+
+import { Checkbox, TextField } from 'final-form-material-ui';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+import { Form, Field } from 'react-final-form';
+
 // Shared utilities
-import validators from 'common/validators';
+import { required } from 'common/validators';
 
 // Component styles
 import styles from './styles';
 
-// Form validation schema
-import schema from './schema';
-
-validate.validators.checked = validators.checked;
-
 // Service methods
-const signUp = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
-  });
-};
+const signUp = () => new Promise(resolve => setTimeout(resolve, 1500));
 
 class SignUp extends Component {
-  state = {
-    values: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      policy: false
-    },
-    touched: {
-      firstName: false,
-      lastName: false,
-      email: false,
-      password: false,
-      policy: null
-    },
-    errors: {
-      firstName: null,
-      lastName: null,
-      email: null,
-      password: null,
-      policy: null
-    },
-    isValid: false,
-    isLoading: false,
-    submitError: null
-  };
-
   handleBack = () => {
     const { history } = this.props;
 
     history.goBack();
   };
 
-  validateForm = _.debounce(() => {
-    const { values } = this.state;
-
-    const newState = { ...this.state };
-    const errors = validate(values, schema);
-
-    newState.errors = errors || {};
-    newState.isValid = errors ? false : true;
-
-    this.setState(newState);
-  }, 300);
-
-  handleFieldChange = (field, value) => {
-    const newState = { ...this.state };
-
-    newState.submitError = null;
-    newState.touched[field] = true;
-    newState.values[field] = value;
-
-    this.setState(newState, this.validateForm);
-  };
-
-  handleSignUp = async () => {
+  handleSignUp = async values => {
     try {
       const { history } = this.props;
-      const { values } = this.state;
-
-      this.setState({ isLoading: true });
 
       await signUp({
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
-        password: values.password
+        password: values.password,
       });
 
       history.push('/sign-in');
     } catch (error) {
-      this.setState({
-        isLoading: false,
-        serviceError: error
-      });
+      return error;
     }
   };
 
   render() {
     const { classes } = this.props;
-    const {
-      values,
-      touched,
-      errors,
-      isValid,
-      submitError,
-      isLoading
-    } = this.state;
-
-    const showFirstNameError =
-      touched.firstName && errors.firstName ? errors.firstName[0] : false;
-    const showLastNameError =
-      touched.lastName && errors.lastName ? errors.lastName[0] : false;
-    const showEmailError =
-      touched.email && errors.email ? errors.email[0] : false;
-    const showPasswordError =
-      touched.password && errors.password ? errors.password[0] : false;
-    const showPolicyError =
-      touched.policy && errors.policy ? errors.policy[0] : false;
 
     return (
       <div className={classes.root}>
-        <Grid
-          className={classes.grid}
-          container
-        >
-          <Grid
-            className={classes.quoteWrapper}
-            item
-            lg={5}
-          >
+        <Grid className={classes.grid} container>
+          <Grid className={classes.quoteWrapper} item lg={5}>
             <div className={classes.quote}>
               <div className={classes.quoteInner}>
-                <Typography
-                  className={classes.quoteText}
-                  variant="h1"
-                >
+                <Typography className={classes.quoteText} variant="h1">
                   Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
                   they sold out High Life.
                 </Typography>
                 <div className={classes.person}>
-                  <Typography
-                    className={classes.name}
-                    variant="body1"
-                  >
+                  <Typography className={classes.name} variant="body1">
                     Takamaru Ayako
                   </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="body2"
-                  >
+                  <Typography className={classes.bio} variant="body2">
                     Manager at inVision
                   </Typography>
                 </div>
               </div>
             </div>
           </Grid>
-          <Grid
-            className={classes.content}
-            item
-            lg={7}
-            xs={12}
-          >
+          <Grid className={classes.content} item lg={7} xs={12}>
             <div className={classes.content}>
               <div className={classes.contentHeader}>
                 <IconButton
@@ -195,159 +91,126 @@ class SignUp extends Component {
                 </IconButton>
               </div>
               <div className={classes.contentBody}>
-                <form className={classes.form}>
-                  <Typography
-                    className={classes.title}
-                    variant="h2"
-                  >
-                    Create new account
-                  </Typography>
-                  <Typography
-                    className={classes.subtitle}
-                    variant="body1"
-                  >
-                    Use your work email to create new account... it's free.
-                  </Typography>
-                  <div className={classes.fields}>
-                    <TextField
-                      className={classes.textField}
-                      label="First name"
-                      name="firstName"
-                      onChange={event =>
-                        this.handleFieldChange('firstName', event.target.value)
-                      }
-                      value={values.firstName}
-                      variant="outlined"
-                    />
-                    {showFirstNameError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.firstName[0]}
+                <Form onSubmit={this.handleSignUp}>
+                  {({
+                    values,
+                    submitting,
+                    handleSubmit,
+                    submitError,
+                    invalid,
+                    submitFailed,
+                    hasSubmitErrors,
+                  }) => (
+                    <form className={classes.form} onSubmit={handleSubmit}>
+                      <Typography className={classes.title} variant="h2">
+                        Create new account
                       </Typography>
-                    )}
-                    <TextField
-                      className={classes.textField}
-                      label="Last name"
-                      onChange={event =>
-                        this.handleFieldChange('lastName', event.target.value)
-                      }
-                      value={values.lastName}
-                      variant="outlined"
-                    />
-                    {showLastNameError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.lastName[0]}
+                      <Typography className={classes.subtitle} variant="body1">
+                        Use your work email to create new account... it's free.
                       </Typography>
-                    )}
-                    <TextField
-                      className={classes.textField}
-                      label="Email address"
-                      name="email"
-                      onChange={event =>
-                        this.handleFieldChange('email', event.target.value)
-                      }
-                      value={values.email}
-                      variant="outlined"
-                    />
-                    {showEmailError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.email[0]}
-                      </Typography>
-                    )}
-                    <TextField
-                      className={classes.textField}
-                      label="Password"
-                      onChange={event =>
-                        this.handleFieldChange('password', event.target.value)
-                      }
-                      type="password"
-                      value={values.password}
-                      variant="outlined"
-                    />
-                    {showPasswordError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.password[0]}
-                      </Typography>
-                    )}
-                    <div className={classes.policy}>
-                      <Checkbox
-                        checked={values.policy}
-                        className={classes.policyCheckbox}
-                        color="primary"
-                        name="policy"
-                        onChange={() =>
-                          this.handleFieldChange('policy', !values.policy)
-                        }
-                      />
-                      <Typography
-                        className={classes.policyText}
-                        variant="body1"
-                      >
-                        I have read the &nbsp;
-                        <Link
-                          className={classes.policyUrl}
-                          to="#"
+                      <div className={classes.fields}>
+                        <Field
+                          className={classes.textField}
+                          component={TextField}
+                          label="First name"
+                          name="firstName"
+                          variant="outlined"
+                          required
+                          validate={value =>
+                            value ? undefined : 'First name is Required'
+                          }
+                        />
+                        <Field
+                          className={classes.textField}
+                          component={TextField}
+                          label="Last name"
+                          name="lastName"
+                          variant="outlined"
+                          required
+                          validate={value =>
+                            value ? undefined : 'Last name is Required'
+                          }
+                        />
+                        <Field
+                          className={classes.textField}
+                          component={TextField}
+                          label="Email address"
+                          name="email"
+                          variant="outlined"
+                          required
+                          validate={value =>
+                            value ? undefined : 'Email address is Required'
+                          }
+                        />
+                        <Field
+                          className={classes.textField}
+                          component={TextField}
+                          label="Password"
+                          name="password"
+                          type="password"
+                          variant="outlined"
+                          required
+                          validate={value =>
+                            value ? undefined : 'Password is Required'
+                          }
+                        />
+                        <div className={classes.policy}>
+                          <Field
+                            component={Checkbox}
+                            className={classes.policyCheckbox}
+                            color="primary"
+                            name="policy"
+                            required
+                            type="checkbox"
+                            validate={required}
+                          />
+                          <Typography
+                            className={classes.policyText}
+                            variant="body1"
+                          >
+                            I have read the &nbsp;
+                            <Link className={classes.policyUrl} to="#">
+                              Terms and Conditions
+                            </Link>
+                            .
+                          </Typography>
+                        </div>
+                      </div>
+                      {submitFailed && hasSubmitErrors && (
+                        <Typography
+                          className={classes.submitError}
+                          variant="body2"
                         >
-                          Terms and Conditions
+                          {submitError}
+                        </Typography>
+                      )}
+                      {submitting ? (
+                        <CircularProgress className={classes.progress} />
+                      ) : (
+                        <Button
+                          className={classes.signUpButton}
+                          color="primary"
+                          disabled={invalid}
+                          onClick={this.handleSignUp}
+                          size="large"
+                          type="submit"
+                          variant="contained"
+                        >
+                          Sign up now
+                        </Button>
+                      )}
+                      <Typography className={classes.signIn} variant="body1">
+                        Have an account?{' '}
+                        <Link className={classes.signInUrl} to="/sign-in">
+                          Sign In
                         </Link>
-                        .
                       </Typography>
-                    </div>
-                    {showPolicyError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.policy[0]}
-                      </Typography>
-                    )}
-                  </div>
-                  {submitError && (
-                    <Typography
-                      className={classes.submitError}
-                      variant="body2"
-                    >
-                      {submitError}
-                    </Typography>
+                      {process.env.NODE_ENV === 'development' && (
+                        <pre>{JSON.stringify(values, null, 2)}</pre>
+                      )}
+                    </form>
                   )}
-                  {isLoading ? (
-                    <CircularProgress className={classes.progress} />
-                  ) : (
-                    <Button
-                      className={classes.signUpButton}
-                      color="primary"
-                      disabled={!isValid}
-                      onClick={this.handleSignUp}
-                      size="large"
-                      variant="contained"
-                    >
-                      Sign up now
-                    </Button>
-                  )}
-                  <Typography
-                    className={classes.signIn}
-                    variant="body1"
-                  >
-                    Have an account?{' '}
-                    <Link
-                      className={classes.signInUrl}
-                      to="/sign-in"
-                    >
-                      Sign In
-                    </Link>
-                  </Typography>
-                </form>
+                </Form>
               </div>
             </div>
           </Grid>
@@ -360,10 +223,10 @@ class SignUp extends Component {
 SignUp.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 };
 
 export default compose(
   withRouter,
-  withStyles(styles)
+  withStyles(styles),
 )(SignUp);
