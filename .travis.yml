@@ -31,4 +31,4 @@ before_script:
   - yarn start --silent &
 script:
   - yarn test --coverage --verbose
-  - yarn cypress run --record
+  - yarn cypress run
