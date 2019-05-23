@@ -30,5 +30,5 @@ before_script:
   ## else it would block execution and hang travis
   - yarn start --silent &
 script:
-  - yarn test --coverage
+  - yarn test --coverage --verbose
   - yarn cypress run --record
