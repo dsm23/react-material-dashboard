@@ -116,9 +116,7 @@ class SignUp extends Component {
                           name="firstName"
                           variant="outlined"
                           required
-                          validate={value =>
-                            value ? undefined : 'First name is Required'
-                          }
+                          validate={required('First name is Required')}
                         />
                         <Field
                           className={classes.textField}
@@ -127,9 +125,7 @@ class SignUp extends Component {
                           name="lastName"
                           variant="outlined"
                           required
-                          validate={value =>
-                            value ? undefined : 'Last name is Required'
-                          }
+                          validate={required('Last name is Required')}
                         />
                         <Field
                           className={classes.textField}
@@ -138,9 +134,7 @@ class SignUp extends Component {
                           name="email"
                           variant="outlined"
                           required
-                          validate={value =>
-                            value ? undefined : 'Email address is Required'
-                          }
+                          validate={required('Email address is Required')}
                         />
                         <Field
                           className={classes.textField}
@@ -150,9 +144,7 @@ class SignUp extends Component {
                           type="password"
                           variant="outlined"
                           required
-                          validate={value =>
-                            value ? undefined : 'Password is Required'
-                          }
+                          validate={required('Password is Required')}
                         />
                         <div className={classes.policy}>
                           <Field
@@ -162,7 +154,7 @@ class SignUp extends Component {
                             name="policy"
                             required
                             type="checkbox"
-                            validate={required}
+                            validate={required()}
                           />
                           <Typography
                             className={classes.policyText}

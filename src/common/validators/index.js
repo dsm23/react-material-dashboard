@@ -4,7 +4,8 @@ export const checked = (value, options) => {
   }
 };
 
-export const required = value => (value ? undefined : 'Required');
+export const required = (message = 'Required') => value =>
+  value ? undefined : message;
 
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);

@@ -53,7 +53,7 @@ const Password = ({ classes, className, ...rest }) => {
                 name="password"
                 type="password"
                 variant="outlined"
-                validate={required}
+                validate={required()}
                 required
               />
               <Field
@@ -63,7 +63,7 @@ const Password = ({ classes, className, ...rest }) => {
                 name="confirm"
                 type="password"
                 variant="outlined"
-                validate={required}
+                validate={required()}
                 required
               />
             </PortletContent>
